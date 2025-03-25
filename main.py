@@ -56,7 +56,7 @@ def main():
         else:
             Led.on('red')
             print("Erreur de lecture de la température.")
-        time.sleep(5)      
+        time.sleep(30)      
 
 # programme principal.
 if __name__ == "__main__":

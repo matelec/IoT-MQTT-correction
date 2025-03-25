@@ -10,7 +10,7 @@ class MqttConnection:
         self.user= user
         self.password= password
 
-    def startMQTT(self,temp):
+    def startMQTT(self,message):
         client = MQTTClient(
             self.identite,
             self.broker,
@@ -23,7 +23,7 @@ class MqttConnection:
         try:
             client.connect()
             print("Connected au broker MQTT avec succes!")
-            client.publish(self.topic, temp)
+            client.publish(self.topic, message)
             time.sleep(1)
             client.disconnect()
         except Exception as e:

@@ -1,11 +1,11 @@
 # appel des librairies
-from Temperature import LectureTemperature
-from lib import ssd1306
+from Temperature import lire_temperature
 import parametres
 from machine import Pin, SoftI2C
 from DelRGB import RGB
 from ConnectWifi import WifiConnection
 from Affichage import AffichageOled
+from Envoyer import MqttConnection
 import time
 
 temp=0
@@ -38,8 +38,8 @@ except Exception as e:
 oled=AffichageOled(128, 64, i2c)
 time.sleep(1)
 wifi=WifiConnection(ssid=parametres.SSID, password=parametres.PASSWORD)
-mqtt=MQTTConnection(broker=parametres.MQTT_BROKER, identite=parametres.MQTT_CLIENT_ID, port=1883, topic=parametres.MQTT_TOPIC, user=parametres.MQTT_USER, password=parametres.MQTT_PASSWORD)
-capteur_temp=LectureTemperature(i2c)
+mqtt=MqttConnection(broker=parametres.MQTT_BROKER, identite=parametres.MQTT_CLIENT_ID, port=1883, topic=parametres.MQTT_TOPIC, user=parametres.MQTT_USER, password=parametres.MQTT_PASSWORD)
+capteur_temp=lire_temperature(i2c)
 bouton = Pin(19, Pin.IN)
 
 

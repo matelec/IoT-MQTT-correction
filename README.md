@@ -39,7 +39,7 @@ Créer un fichier `config.json` à la racine du projet avec le contenu suivant :
   "wifi_ssid": "nom_de_votre_reseau",
   "wifi_password": "votre_mot_de_passe",
   "mqtt_broker": "adresse IP du serveur IoT",
-  "mqtt_topic": "sensors/temperature",
+  "mqtt_topic": "Atelier/S020",
   "mqtt_user": "user_bpcierl",
   "mqtt_password": "cielCIEL2025$" 
 
@@ -96,6 +96,7 @@ Au démarrage, le programme :
 
 - [MicroPython](https://micropython.org/) (v1.20+)
 - Driver `ssd1306.py` inclus dans `lib/` (compatible MicroPython officiel)
+- Module `umqtt_simple.py` inclus dans `lib/` (compatible MicroPython officiel)
 - Module `network` (intégré à MicroPython)
 
 ---

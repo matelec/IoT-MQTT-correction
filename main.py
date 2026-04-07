@@ -1,5 +1,5 @@
 # appel des librairies
-from Temperature import lire_temperature
+from Temperature import LectureTemperature
 import parametres
 from machine import Pin, SoftI2C
 from DelRGB import RGB
@@ -39,21 +39,21 @@ oled=AffichageOled(128, 64, i2c)
 time.sleep(1)
 wifi=WifiConnection(ssid=parametres.SSID, password=parametres.PASSWORD)
 mqtt=MqttConnection(broker=parametres.MQTT_BROKER, identite=parametres.MQTT_CLIENT_ID, port=1883, topic=parametres.MQTT_TOPIC, user=parametres.MQTT_USER, password=parametres.MQTT_PASSWORD)
-capteur_temp=lire_temperature(i2c)
+capteur_temp=LectureTemperature(i2c)
 bouton = Pin(19, Pin.IN)
 
 
 
 
 # définition de la fonction interruption bouton
-def interrupt_button():
+def interrupt_button(pin):
     global affichage_actif
 
     affichage_actif = True
 
 
 # définition du bouton en interruption
-bouton.irq(trigger=Pin.IRQ_FALLING, handler=lambda pin: interrupt_button())
+bouton.irq(trigger=Pin.IRQ_FALLING, handler=interrupt_button)
 
 
 # définition du programme principal
@@ -67,7 +67,7 @@ def main():
         print("Connected to WiFi successfully.")
         led.success()
         oled.afficher_message(wifi.ssid, wifi.sta_if.ifconfig()[0])
-        time.sleep(10)  # Affiche le message de connexion pendant 20 secondes
+        time.sleep(10)  # Affiche le message de connexion pendant 10 secondes
         oled.eteindre()
     else:
         print("Failed to connect to WiFi.")
@@ -78,8 +78,8 @@ def main():
     while True:
         maintenant = time.ticks_ms()
 
-        # Mise à jour toutes les 2 minutes
-        if time.ticks_diff(maintenant, derniere_lecture) >= 120_000:
+        # Mise à jour toutes les 4 minutes
+        if time.ticks_diff(maintenant, derniere_lecture) >= 240_000:
             temp = capteur_temp.lire_temperature()
             print("Temperature:", temp, "°C")
             led.mqtt()
@@ -93,12 +93,15 @@ def main():
 
         # Gestion de l'affichage déclenchée par l'IRQ
         if affichage_actif:
+            led.local()
             temp = capteur_temp.lire_temperature()
             time.sleep(1)  # Petite pause pour assurer une lecture stable de la température
             oled.afficher_temperature(temp)
             time.sleep(15)  # Affiche la température pendant 15 secondes
             oled.eteindre()
             affichage_actif = False
+            led.on('green')
+
 
         time.sleep(1)  # Petite pause pour éviter une boucle trop rapide
 
